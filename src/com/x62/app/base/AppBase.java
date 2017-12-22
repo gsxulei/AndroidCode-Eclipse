@@ -1,6 +1,7 @@
 package com.x62.app.base;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * 主要用于提供与具体APP无关的全局的Application、Context
@@ -10,6 +11,9 @@ import android.app.Application;
  */
 public class AppBase
 {
+	private Context mCtx;
+	public Application app;
+
 	private static class Loader
 	{
 		private static final AppBase INSTANCE=new AppBase();
@@ -19,8 +23,6 @@ public class AppBase
 	{
 		return Loader.INSTANCE;
 	}
-
-	public Application app;
 
 	private AppBase()
 	{
@@ -40,6 +42,7 @@ public class AppBase
 			 */
 			app=(Application)Class.forName("android.app.ActivityThread").getMethod("currentApplication").invoke(null,
 					(Object[])null);
+			mCtx=app;
 		}
 		catch(Exception e)
 		{
@@ -64,5 +67,24 @@ public class AppBase
 		// {
 		// e.printStackTrace();
 		// }
+	}
+
+	public void setContext(Application app)
+	{
+		this.app=app;
+	}
+
+	/**
+	 * 获取Context
+	 *
+	 * @return
+	 */
+	public Context getContext()
+	{
+		if(mCtx!=null)
+		{
+			return mCtx;
+		}
+		return app;
 	}
 }
